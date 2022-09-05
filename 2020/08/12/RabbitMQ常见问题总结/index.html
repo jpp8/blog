@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="No method found for class [B 解决：consumer配置消息转换器，使用Jackson  1234567@Configuration  public class RabbitConfig &amp;#123;      @Bean      public MessageConverter messageConverter() &amp;#123;          return new">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RabbitMQ常见问题总结">
+<meta property="og:url" content="https://jpp8.github.io/blog/2020/08/12/RabbitMQ%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:site_name" content="JP&#39;s Blog">
+<meta property="og:description" content="No method found for class [B 解决：consumer配置消息转换器，使用Jackson  1234567@Configuration  public class RabbitConfig &amp;#123;      @Bean      public MessageConverter messageConverter() &amp;#123;          return new">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-08-11T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-09-05T05:55:37.297Z">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/blog/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/blog/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>RabbitMQ常见问题总结</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/blog/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/blog/">Home</a></li><!--
+     --><!--
+       --><li><a href="/blog/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/blog/search">Search</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/blog/2020/07/21/RabbitMQ%E5%B8%B8%E7%94%A8%E6%B3%A8%E8%A7%A3/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://jpp8.github.io/blog/2020/08/12/RabbitMQ%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://jpp8.github.io/blog/2020/08/12/RabbitMQ%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/&text=RabbitMQ常见问题总结"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://jpp8.github.io/blog/2020/08/12/RabbitMQ%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/&title=RabbitMQ常见问题总结"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://jpp8.github.io/blog/2020/08/12/RabbitMQ%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/&is_video=false&description=RabbitMQ常见问题总结"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=RabbitMQ常见问题总结&body=Check out this article: https://jpp8.github.io/blog/2020/08/12/RabbitMQ%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://jpp8.github.io/blog/2020/08/12/RabbitMQ%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/&title=RabbitMQ常见问题总结"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://jpp8.github.io/blog/2020/08/12/RabbitMQ%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/&title=RabbitMQ常见问题总结"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://jpp8.github.io/blog/2020/08/12/RabbitMQ%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/&title=RabbitMQ常见问题总结"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://jpp8.github.io/blog/2020/08/12/RabbitMQ%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/&title=RabbitMQ常见问题总结"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://jpp8.github.io/blog/2020/08/12/RabbitMQ%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/&name=RabbitMQ常见问题总结&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://jpp8.github.io/blog/2020/08/12/RabbitMQ%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/&t=RabbitMQ常见问题总结"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#No-method-found-for-class-B"><span class="toc-number">1.</span> <span class="toc-text">No method found for class [B</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Listener-threw-exception"><span class="toc-number">2.</span> <span class="toc-text">Listener threw exception</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#clean-channel-shutdown-%E6%B6%88%E6%81%AF%E5%8F%91%E9%80%81%E6%88%90%E5%8A%9F%EF%BC%8CConfirmCallback-ack%E8%BF%94%E5%9B%9E%E4%B8%BAfalse"><span class="toc-number">3.</span> <span class="toc-text">clean channel shutdown(消息发送成功，ConfirmCallback ack返回为false)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Channel-shutdown-channel-error%EF%BC%9B-protocol-method%E2%80%A6"><span class="toc-number">4.</span> <span class="toc-text">Channel shutdown: channel error； protocol method…</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        RabbitMQ常见问题总结
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name"></span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-08-11T16:00:00.000Z" itemprop="datePublished">2020-08-12</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="No-method-found-for-class-B"><a href="#No-method-found-for-class-B" class="headerlink" title="No method found for class [B"></a>No method found for class [B</h2><ul>
+<li>解决：consumer配置消息转换器，使用Jackson</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span>  </span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RabbitConfig</span> &#123;  </span><br><span class="line">    <span class="meta">@Bean</span>  </span><br><span class="line">    <span class="keyword">public</span> MessageConverter <span class="title function_">messageConverter</span><span class="params">()</span> &#123;  </span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Jackson2JsonMessageConverter</span>();  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="Listener-threw-exception"><a href="#Listener-threw-exception" class="headerlink" title="Listener threw exception"></a>Listener threw exception</h2><p>org.springframework.amqp.rabbit.support.ListenerExecutionFailedException: Listener threw exception</p>
+<p>Cannot determine ReplyTo message property value: Request message does not contain reply-to property, and no default response Exchange was set.</p>
+<ul>
+<li>解决：接收消息的方法不能有返回值（void）</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RabbitListener(queue = &quot;simple.queue&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">getMessage</span><span class="params">(Message message)</span>&#123;</span><br><span class="line">	<span class="comment">//...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>第二种情况：别用@rabbitHandler </p>
+<h2 id="clean-channel-shutdown-消息发送成功，ConfirmCallback-ack返回为false"><a href="#clean-channel-shutdown-消息发送成功，ConfirmCallback-ack返回为false" class="headerlink" title="clean channel shutdown(消息发送成功，ConfirmCallback ack返回为false)"></a>clean channel shutdown(消息发送成功，ConfirmCallback ack返回为false)</h2><p>消息明明已经成功到达队列（经过交换机），可是在后台打印的日志还是显示：ack为false！</p>
+<p>原因：在测试方法中测试，当测试方法结束，rabbitmq相关的资源也就关闭了，虽然我们的消息发送出去，但异步的ConfirmCallback却由于资源关闭而出现了上面的问题</p>
+<p>解决：在测试方法中测试的话，让线程休眠几秒</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span>  </span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">test01</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException &#123;  </span><br><span class="line">    <span class="type">Dog</span> <span class="variable">dog</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Dog</span>();  </span><br><span class="line">    dog.setId(UUID.randomUUID().toString());  </span><br><span class="line">    dog.setAge(<span class="number">2</span>);  </span><br><span class="line">    dog.setName(<span class="string">&quot;aaa&quot;</span>);  </span><br><span class="line">    rabbitTemplate.convertAndSend(exchangeName,routingKey,dog,<span class="keyword">new</span> <span class="title class_">CorrelationData</span>(UUID.randomUUID().toString()));  </span><br><span class="line">    System.out.println(<span class="string">&quot;发送成功!&quot;</span>);  </span><br><span class="line">    TimeUnit.SECONDS.sleep(<span class="number">3</span>);  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>测试结果：</p>
+<p>correlationData:CorrelationData [id&#x3D;518952f3-139b-4f5e-9a9b-80f6e7588fec],ack:true,cause:null</p>
+<p>success！！！！</p>
+<h2 id="Channel-shutdown-channel-error；-protocol-method…"><a href="#Channel-shutdown-channel-error；-protocol-method…" class="headerlink" title="Channel shutdown: channel error； protocol method…"></a>Channel shutdown: channel error； protocol method…</h2><figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring.rabbitmq.listener.simple.acknowledge-mode</span>=<span class="string">manual</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+  </div>
+</article>
+
+
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/blog/">Home</a></li>
+         
+          <li><a href="/blog/archives/">Writing</a></li>
+         
+          <li><a href="/blog/search">Search</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#No-method-found-for-class-B"><span class="toc-number">1.</span> <span class="toc-text">No method found for class [B</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Listener-threw-exception"><span class="toc-number">2.</span> <span class="toc-text">Listener threw exception</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#clean-channel-shutdown-%E6%B6%88%E6%81%AF%E5%8F%91%E9%80%81%E6%88%90%E5%8A%9F%EF%BC%8CConfirmCallback-ack%E8%BF%94%E5%9B%9E%E4%B8%BAfalse"><span class="toc-number">3.</span> <span class="toc-text">clean channel shutdown(消息发送成功，ConfirmCallback ack返回为false)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Channel-shutdown-channel-error%EF%BC%9B-protocol-method%E2%80%A6"><span class="toc-number">4.</span> <span class="toc-text">Channel shutdown: channel error； protocol method…</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://jpp8.github.io/blog/2020/08/12/RabbitMQ%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://jpp8.github.io/blog/2020/08/12/RabbitMQ%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/&text=RabbitMQ常见问题总结"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://jpp8.github.io/blog/2020/08/12/RabbitMQ%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/&title=RabbitMQ常见问题总结"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://jpp8.github.io/blog/2020/08/12/RabbitMQ%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/&is_video=false&description=RabbitMQ常见问题总结"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=RabbitMQ常见问题总结&body=Check out this article: https://jpp8.github.io/blog/2020/08/12/RabbitMQ%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://jpp8.github.io/blog/2020/08/12/RabbitMQ%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/&title=RabbitMQ常见问题总结"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://jpp8.github.io/blog/2020/08/12/RabbitMQ%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/&title=RabbitMQ常见问题总结"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://jpp8.github.io/blog/2020/08/12/RabbitMQ%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/&title=RabbitMQ常见问题总结"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://jpp8.github.io/blog/2020/08/12/RabbitMQ%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/&title=RabbitMQ常见问题总结"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://jpp8.github.io/blog/2020/08/12/RabbitMQ%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/&name=RabbitMQ常见问题总结&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://jpp8.github.io/blog/2020/08/12/RabbitMQ%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/&t=RabbitMQ常见问题总结"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2022
+    JP&#39;s Blog
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/blog/">Home</a></li><!--
+     --><!--
+       --><li><a href="/blog/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/blog/search">Search</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+
+    <script src='https://unpkg.com/mermaid@8.0.0/dist/mermaid.min.js'></script>
+    <script>
+      if (window.mermaid) {
+        mermaid.initialize({theme: 'forest'});
+      }
+    </script>
+
+
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/blog/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+
+</body>
+</html>

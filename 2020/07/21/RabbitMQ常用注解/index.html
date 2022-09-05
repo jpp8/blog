@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="发送消息rabbitTemplate.convertAndSend()，如果发的是对象，&#x3D;&#x3D;要序列化&#x3D;&#x3D; 序列化被序列化对象应提供一个无参的构造函数，否则会抛出异常 1234567public class User&amp;#123;	private String name;	&#x2F;&#x2F;...	public User()&amp;#123;			&amp;#125;&amp;#125;   Ja">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SpringAMQP常用注解总结">
+<meta property="og:url" content="https://jpp8.github.io/blog/2020/07/21/RabbitMQ%E5%B8%B8%E7%94%A8%E6%B3%A8%E8%A7%A3/index.html">
+<meta property="og:site_name" content="JP&#39;s Blog">
+<meta property="og:description" content="发送消息rabbitTemplate.convertAndSend()，如果发的是对象，&#x3D;&#x3D;要序列化&#x3D;&#x3D; 序列化被序列化对象应提供一个无参的构造函数，否则会抛出异常 1234567public class User&amp;#123;	private String name;	&#x2F;&#x2F;...	public User()&amp;#123;			&amp;#125;&amp;#125;   Ja">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-07-20T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-09-05T05:57:21.345Z">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/blog/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/blog/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>SpringAMQP常用注解总结</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/blog/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/blog/">Home</a></li><!--
+     --><!--
+       --><li><a href="/blog/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/blog/search">Search</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/blog/2020/08/12/RabbitMQ%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/blog/2020/06/02/RabbitMQ%E5%9F%BA%E7%A1%80/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://jpp8.github.io/blog/2020/07/21/RabbitMQ%E5%B8%B8%E7%94%A8%E6%B3%A8%E8%A7%A3/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://jpp8.github.io/blog/2020/07/21/RabbitMQ%E5%B8%B8%E7%94%A8%E6%B3%A8%E8%A7%A3/&text=SpringAMQP常用注解总结"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://jpp8.github.io/blog/2020/07/21/RabbitMQ%E5%B8%B8%E7%94%A8%E6%B3%A8%E8%A7%A3/&title=SpringAMQP常用注解总结"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://jpp8.github.io/blog/2020/07/21/RabbitMQ%E5%B8%B8%E7%94%A8%E6%B3%A8%E8%A7%A3/&is_video=false&description=SpringAMQP常用注解总结"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=SpringAMQP常用注解总结&body=Check out this article: https://jpp8.github.io/blog/2020/07/21/RabbitMQ%E5%B8%B8%E7%94%A8%E6%B3%A8%E8%A7%A3/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://jpp8.github.io/blog/2020/07/21/RabbitMQ%E5%B8%B8%E7%94%A8%E6%B3%A8%E8%A7%A3/&title=SpringAMQP常用注解总结"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://jpp8.github.io/blog/2020/07/21/RabbitMQ%E5%B8%B8%E7%94%A8%E6%B3%A8%E8%A7%A3/&title=SpringAMQP常用注解总结"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://jpp8.github.io/blog/2020/07/21/RabbitMQ%E5%B8%B8%E7%94%A8%E6%B3%A8%E8%A7%A3/&title=SpringAMQP常用注解总结"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://jpp8.github.io/blog/2020/07/21/RabbitMQ%E5%B8%B8%E7%94%A8%E6%B3%A8%E8%A7%A3/&title=SpringAMQP常用注解总结"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://jpp8.github.io/blog/2020/07/21/RabbitMQ%E5%B8%B8%E7%94%A8%E6%B3%A8%E8%A7%A3/&name=SpringAMQP常用注解总结&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://jpp8.github.io/blog/2020/07/21/RabbitMQ%E5%B8%B8%E7%94%A8%E6%B3%A8%E8%A7%A3/&t=SpringAMQP常用注解总结"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%91%E9%80%81%E6%B6%88%E6%81%AF"><span class="toc-number">1.</span> <span class="toc-text">发送消息</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BA%8F%E5%88%97%E5%8C%96"><span class="toc-number">1.1.</span> <span class="toc-text">序列化</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%91%E5%90%AC%E6%B6%88%E6%81%AF"><span class="toc-number">2.</span> <span class="toc-text">监听消息</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A5%E6%94%B6%E6%B6%88%E6%81%AF%E7%9A%84%E6%96%B9%E6%B3%95%E5%8F%82%E6%95%B0"><span class="toc-number">2.1.</span> <span class="toc-text">接收消息的方法参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RabbitListener%E8%AE%BE%E7%BD%AE%E4%BA%A4%E6%8D%A2%E6%9C%BA%E5%92%8C%E9%98%9F%E5%88%97%E7%9A%84%E7%BB%91%E5%AE%9A"><span class="toc-number">2.2.</span> <span class="toc-text">@RabbitListener设置交换机和队列的绑定</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Payload%E3%80%81-Header"><span class="toc-number">2.3.</span> <span class="toc-text">@Payload、@Header</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RabbitHandler"><span class="toc-number">2.4.</span> <span class="toc-text">@RabbitHandler</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        SpringAMQP常用注解总结
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name"></span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-07-20T16:00:00.000Z" itemprop="datePublished">2020-07-21</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="发送消息"><a href="#发送消息" class="headerlink" title="发送消息"></a>发送消息</h2><p>rabbitTemplate.convertAndSend()，如果发的是对象，&#x3D;&#x3D;要序列化&#x3D;&#x3D;</p>
+<h3 id="序列化"><a href="#序列化" class="headerlink" title="序列化"></a>序列化</h3><p>被序列化对象应提供一个无参的构造函数，否则会抛出异常</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">User</span>&#123;</span><br><span class="line">	<span class="keyword">private</span> String name;</span><br><span class="line">	<span class="comment">//...</span></span><br><span class="line">	<span class="keyword">public</span> <span class="title function_">User</span><span class="params">()</span>&#123;</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>Jackson2JsonMessageConverter</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="keyword">public</span> MessageConverter <span class="title function_">jsonMessageConverter</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Jackson2JsonMessageConverter</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="监听消息"><a href="#监听消息" class="headerlink" title="监听消息"></a>监听消息</h2><p>监听消息的方法&#x3D;&#x3D;不能有返回值 –&gt; void&#x3D;&#x3D; ，如果是监听类，+  &#x3D;&#x3D;@Component</p>
+<ul>
+<li>@RabbitListener：可以标注在类上和方法上</li>
+<li>@RabbitHandler：方法上，可以区分接收不同的消息</li>
+</ul>
+<h3 id="接收消息的方法参数"><a href="#接收消息的方法参数" class="headerlink" title="接收消息的方法参数"></a>接收消息的方法参数</h3><ul>
+<li>Message message：消息，（springAMQP包下的）</li>
+<li>Channel channel：通道，用来手动确认ACK</li>
+<li>Object obj：对象<ul>
+<li>如果对象共享，并明确得知传入的对象，就直接写对象名，方法注解可以使用<code>@RabbitHandler</code> 标注</li>
+<li>如果对象不共享，比如分布式的情况，就用object来代替，不能使用&#96;@RabbitHandler</li>
+</ul>
+</li>
+</ul>
+<p>① 确定传入对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RabbitListener(queues = &quot;simple.test&quot;)</span>  </span><br><span class="line"><span class="meta">@Component</span>  </span><br><span class="line"><span class="meta">@Slf4j</span>  </span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ConsumerListener</span> &#123;  </span><br><span class="line">    <span class="meta">@RabbitHandler</span>  </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">getSimple</span><span class="params">(Message message, Channel channel, User user)</span> &#123;  </span><br><span class="line">        System.out.println(<span class="string">&quot;接收到的内容:\t&quot;</span>+user);  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>② 不确定传入的对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span>  </span><br><span class="line"><span class="meta">@RabbitListener</span>  </span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ConsumerListener</span> &#123;  </span><br><span class="line">    <span class="meta">@RabbitListener(queues = &quot;direct.queue&quot;)</span>  </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">getMessageInDirectQueue</span><span class="params">(Message message, Channel channel ,Object obj)</span>&#123;  </span><br><span class="line">        System.out.println(<span class="string">&quot;接收到的消息：&quot;</span>+message);  </span><br><span class="line">        System.out.println(<span class="string">&quot;以成功接收：&quot;</span>+obj+<span class="string">&quot;,obj的类型：&quot;</span>+obj.getClass());  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+<h3 id="RabbitListener设置交换机和队列的绑定"><a href="#RabbitListener设置交换机和队列的绑定" class="headerlink" title="@RabbitListener设置交换机和队列的绑定"></a>@RabbitListener设置交换机和队列的绑定</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">@RabbitListener(</span></span><br><span class="line"><span class="meta">bindings = @QueueBinding(</span></span><br><span class="line"><span class="meta">        exchange = @Exchange(value = &quot;topic.exchange&quot;,durable = &quot;true&quot;,type = &quot;topic&quot;),</span></span><br><span class="line"><span class="meta">        value = @Queue(value = &quot;consumer_queue&quot;,durable = &quot;true&quot;),</span></span><br><span class="line"><span class="meta">        key = &quot;key.#&quot;</span></span><br><span class="line"><span class="meta">))</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">processMessage1</span><span class="params">(Message message)</span> &#123;</span><br><span class="line">    System.out.println(message);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="Payload、-Header"><a href="#Payload、-Header" class="headerlink" title="@Payload、@Header"></a>@Payload、@Header</h3><p>@Header：接收消息头<br>@Payload：接收消息体</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RabbitListener(queues = &quot;debug&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">processMessage1</span><span class="params">(<span class="meta">@Payload</span> String body, <span class="meta">@Header</span> String token)</span> &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;body：&quot;</span>+body);</span><br><span class="line">    System.out.println(<span class="string">&quot;token：&quot;</span>+token);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="RabbitHandler"><a href="#RabbitHandler" class="headerlink" title="@RabbitHandler"></a>@RabbitHandler</h3><ul>
+<li>@RabbitListener 可以标注在类上面，需配合 @RabbitHandler 注解一起使用</li>
+<li>@RabbitListener 标注在类上面表示当有收到消息的时候，就交给 @RabbitHandler 的方法处理，具体使用哪个方法处理，根据 MessageConverter 转换后的参数类型</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="meta">@RabbitListener(queues = &quot;consumer_queue&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Receiver</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RabbitHandler</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">processMessage1</span><span class="params">(String message)</span> &#123;</span><br><span class="line">        System.out.println(message);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RabbitHandler</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">processMessage2</span><span class="params">(User user)</span> &#123;</span><br><span class="line">        System.out.println(user.toString());</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+  </div>
+</article>
+
+
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/blog/">Home</a></li>
+         
+          <li><a href="/blog/archives/">Writing</a></li>
+         
+          <li><a href="/blog/search">Search</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%91%E9%80%81%E6%B6%88%E6%81%AF"><span class="toc-number">1.</span> <span class="toc-text">发送消息</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BA%8F%E5%88%97%E5%8C%96"><span class="toc-number">1.1.</span> <span class="toc-text">序列化</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%91%E5%90%AC%E6%B6%88%E6%81%AF"><span class="toc-number">2.</span> <span class="toc-text">监听消息</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A5%E6%94%B6%E6%B6%88%E6%81%AF%E7%9A%84%E6%96%B9%E6%B3%95%E5%8F%82%E6%95%B0"><span class="toc-number">2.1.</span> <span class="toc-text">接收消息的方法参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RabbitListener%E8%AE%BE%E7%BD%AE%E4%BA%A4%E6%8D%A2%E6%9C%BA%E5%92%8C%E9%98%9F%E5%88%97%E7%9A%84%E7%BB%91%E5%AE%9A"><span class="toc-number">2.2.</span> <span class="toc-text">@RabbitListener设置交换机和队列的绑定</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Payload%E3%80%81-Header"><span class="toc-number">2.3.</span> <span class="toc-text">@Payload、@Header</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RabbitHandler"><span class="toc-number">2.4.</span> <span class="toc-text">@RabbitHandler</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://jpp8.github.io/blog/2020/07/21/RabbitMQ%E5%B8%B8%E7%94%A8%E6%B3%A8%E8%A7%A3/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://jpp8.github.io/blog/2020/07/21/RabbitMQ%E5%B8%B8%E7%94%A8%E6%B3%A8%E8%A7%A3/&text=SpringAMQP常用注解总结"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://jpp8.github.io/blog/2020/07/21/RabbitMQ%E5%B8%B8%E7%94%A8%E6%B3%A8%E8%A7%A3/&title=SpringAMQP常用注解总结"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://jpp8.github.io/blog/2020/07/21/RabbitMQ%E5%B8%B8%E7%94%A8%E6%B3%A8%E8%A7%A3/&is_video=false&description=SpringAMQP常用注解总结"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=SpringAMQP常用注解总结&body=Check out this article: https://jpp8.github.io/blog/2020/07/21/RabbitMQ%E5%B8%B8%E7%94%A8%E6%B3%A8%E8%A7%A3/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://jpp8.github.io/blog/2020/07/21/RabbitMQ%E5%B8%B8%E7%94%A8%E6%B3%A8%E8%A7%A3/&title=SpringAMQP常用注解总结"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://jpp8.github.io/blog/2020/07/21/RabbitMQ%E5%B8%B8%E7%94%A8%E6%B3%A8%E8%A7%A3/&title=SpringAMQP常用注解总结"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://jpp8.github.io/blog/2020/07/21/RabbitMQ%E5%B8%B8%E7%94%A8%E6%B3%A8%E8%A7%A3/&title=SpringAMQP常用注解总结"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://jpp8.github.io/blog/2020/07/21/RabbitMQ%E5%B8%B8%E7%94%A8%E6%B3%A8%E8%A7%A3/&title=SpringAMQP常用注解总结"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://jpp8.github.io/blog/2020/07/21/RabbitMQ%E5%B8%B8%E7%94%A8%E6%B3%A8%E8%A7%A3/&name=SpringAMQP常用注解总结&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://jpp8.github.io/blog/2020/07/21/RabbitMQ%E5%B8%B8%E7%94%A8%E6%B3%A8%E8%A7%A3/&t=SpringAMQP常用注解总结"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2022
+    JP&#39;s Blog
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/blog/">Home</a></li><!--
+     --><!--
+       --><li><a href="/blog/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/blog/search">Search</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+
+    <script src='https://unpkg.com/mermaid@8.0.0/dist/mermaid.min.js'></script>
+    <script>
+      if (window.mermaid) {
+        mermaid.initialize({theme: 'forest'});
+      }
+    </script>
+
+
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/blog/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+
+</body>
+</html>
